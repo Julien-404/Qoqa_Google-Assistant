@@ -2,14 +2,14 @@
 const Koa = require('koa');
 const koaBody = require('koa-body');
 
-const http = require('http');
+const https = require('https');
 const DomParser = require('dom-parser');
 const Entities = require('html-entities').XmlEntities;
 
 const app = new Koa();
 const entities = new Entities();
 
-const category_paths = {
+const links = {
     "Qoqa" : "https://www.qoqa.ch/fr/feed/product.xml",
     "Qwine" : "https://qwine.qoqa.ch/fr/feed/product.xml",
     "Qbeer" : "https://qbeer.qoqa.ch/fr/feed/product.xml",
@@ -21,7 +21,7 @@ const category_paths = {
 
 const getArticle = function(category) {
     return new Promise((resolve, reject) => {
-        http.get({path: category_paths[category]}, (rssResponse) => {
+        https.get({url: links[category]}, (rssResponse) => {
             let body = '';
             rssResponse.on('data', (d) => { body += d; }); // store each response chunk
             rssResponse.on('end', () => {
