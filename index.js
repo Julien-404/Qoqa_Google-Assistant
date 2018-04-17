@@ -41,7 +41,7 @@ const getArticle = function(offer) {
 
 app.use(koaBody());
 app.use(async ctx => {
-    let offer = ctx.request.body.result.parameters['Actual_Offer'];
+    let offer = ctx.request.body.parameters['Actual_Offer'];
 
     getArticle(offer).then((output) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
@@ -53,8 +53,8 @@ app.use(async ctx => {
 });
 
 app.on('error', (err, ctx) => {
-    log.error('server error', err, ctx)
+    console.log('error in function xyz:', err, 'whilst doing abc');
   });
 
-process.env.PORT || 8080;
-// app.listen(8000);
+process.env.PORT || 8000;
+app.listen(8000);

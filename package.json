@@ -16,7 +16,8 @@
     "dom-parser": "^0.1.5",
     "html-entities": "^1.2.1",
     "koa": "^2.5.0",
-    "koa-body": "^2.5.0"
+    "koa-body": "^2.5.0",
+    "koa-bodyparser": "^4.2.0"
   },
   "engines": {
     "node": "9.11.1"
