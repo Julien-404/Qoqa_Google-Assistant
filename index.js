@@ -41,7 +41,7 @@ const getArticle = function(category) {
 
 app.use(koaBody());
 app.use(async ctx => {
-    let category = ctx.request.body.result.parameters['Categories'];
+    let category = ctx.request.body.result.parameters['Actual_Offer'];
 
     getArticle(category).then((output) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
