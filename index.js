@@ -46,7 +46,7 @@ const getArticle = function(offer) {
 
 app.use(koaBody());
 app.use(async ctx => {
-    let offer = ctx.request.body.parameters['Actual_Offer'];
+    let offer = ctx.request.body.queryResult.parameters['Actual_Offer'];
 
     await getArticle(offer).then((output) => {
         console.log(output);
