@@ -19,9 +19,9 @@ const links = {
     
 };
 
-const getArticle = function(category) {
+const getArticle = function(offer) {
     return new Promise((resolve, reject) => {
-        https.get({url: links[category]}, (rssResponse) => {
+        https.get({url: links[offer]}, (rssResponse) => {
             let body = '';
             rssResponse.on('data', (d) => { body += d; }); // store each response chunk
             rssResponse.on('end', () => {
@@ -29,7 +29,7 @@ const getArticle = function(category) {
                 var xmlDoc = parser.parseFromString(body,"text/xml");
                 var title = "";
                 var title = entities.decode(xmlDoc.getElementsByTagName("channel")[0].getElementsByTagName("item")[0].getElementsByTagName("title")[0].textContent);
-                var response = "L'offre en cours pour \""+category+"\" est : "+title;
+                var response = "L'offre en cours pour \""+offer+"\" est : "+title;
                 resolve(response);
             });
             rssResponse.on('error', (error) => {
@@ -41,9 +41,9 @@ const getArticle = function(category) {
 
 app.use(koaBody());
 app.use(async ctx => {
-    let category = ctx.request.body.result.parameters['Actual_Offer'];
+    let offer = ctx.request.body.result.parameters['Actual_Offer'];
 
-    getArticle(category).then((output) => {
+    getArticle(offer).then((output) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
         ctx.body(JSON.stringify({ 'speech': output, 'displayText': output }));
     }).catch((error) => {
