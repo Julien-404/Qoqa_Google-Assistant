@@ -21,18 +21,23 @@ const links = {
 
 const getArticle = function(offer) {
     return new Promise((resolve, reject) => {
-        https.get({url: links[offer]}, (rssResponse) => {
+        console.log(links[offer]);
+        https.get(links[offer], (rssResponse) => {
             let body = '';
             rssResponse.on('data', (d) => { body += d; }); // store each response chunk
             rssResponse.on('end', () => {
-                var parser = new DomParser();
-                var xmlDoc = parser.parseFromString(body,"text/xml");
-                var title = "";
-                var title = entities.decode(xmlDoc.getElementsByTagName("channel")[0].getElementsByTagName("item")[0].getElementsByTagName("title")[0].textContent);
-                var response = "L'offre en cours pour \""+offer+"\" est : "+title;
+                // console.log('END', body);
+                let parser = new DomParser();
+                let xmlDoc = parser.parseFromString(body,"text/xml");
+                // console.log(xmlDoc.getElementsByTagName("title")[2].textContent);
+                let shopTitle = xmlDoc.getElementsByTagName("title")[0].textContent;
+                let title = xmlDoc.getElementsByTagName("title")[1].textContent;
+                let product = xmlDoc.getElementsByTagName("title")[2].textContent;
+                let response = `${shopTitle}, ${title} : ${product}.`;
                 resolve(response);
             });
             rssResponse.on('error', (error) => {
+                // console.log('ERROR', error);
                 reject(error);
             });
         });
@@ -43,18 +48,19 @@ app.use(koaBody());
 app.use(async ctx => {
     let offer = ctx.request.body.parameters['Actual_Offer'];
 
-    getArticle(offer).then((output) => {
+    await getArticle(offer).then((output) => {
+        console.log(output);
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
-        ctx.body(JSON.stringify({ 'speech': output, 'displayText': output }));
+        ctx.body = JSON.stringify({ 'speech': output, 'displayText': output });
     }).catch((error) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
-        ctx.body(JSON.stringify({ 'speech': error, 'displayText': error }));
+        ctx.body = JSON.stringify({ 'speech': error, 'displayText': error });
     });
 });
 
 app.on('error', (err, ctx) => {
-    console.log('error in function xyz:', err, 'whilst doing abc');
+    console.log('error in function :', err);
   });
 
-process.env.PORT || 8000;
-app.listen(8000);
+// process.env.PORT || 8000;
+// app.listen(8000);
