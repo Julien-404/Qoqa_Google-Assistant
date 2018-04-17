@@ -58,15 +58,9 @@ app.use(async ctx => {
     });
 });
 
-app.on('error', (err, ctx) => {
-    console.log('error in function :', err);
-  });
-
-  app.set('port', (process.env.PORT || 3000))
-  app.listen(app.get('port'), function() {
-    console.log("Node app is running at localhost:" + app.get('port'))
-  })
-
+const port = process.env.PORT || 3000;
+app.listen(port);
+console.log('Listening to %s', port);
 
 // process.env.PORT || 3000;
 // app.listen(3000);
