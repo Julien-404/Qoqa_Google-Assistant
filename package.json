@@ -4,7 +4,8 @@
     "description": "Last offer from qoqa.ch for google assistant.",
     "main": "index.js",
     "scripts": {
-      "test": ""
+      "test": "",
+      "start": "node index.js"
     },
     "keywords": [
       ""
