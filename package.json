@@ -11,4 +11,11 @@
     ],
     "author": "Julien Dubi",
     "license": "MIT"
-  }
+    "dependencies": {
+        "dom-parser": "^0.1.5",
+        "html-entities": "^1.2.1"
+      },
+      "engines": {
+        "node": "9.11.1"
+      }
+    }
