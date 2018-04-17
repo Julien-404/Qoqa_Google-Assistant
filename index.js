@@ -1,12 +1,12 @@
-/*
- HTTP Cloud Function.
- @param {Object} req Cloud Function request context.
- @param {Object} res Cloud Function response context.
-*/
 'use strict';
+const Koa = require('koa');
+const koaBody = require('koa-body');
+
 const http = require('http');
 const DomParser = require('dom-parser');
 const Entities = require('html-entities').XmlEntities;
+
+const app = new Koa();
 const entities = new Entities();
 
 const category_paths = {
@@ -19,18 +19,7 @@ const category_paths = {
     
 };
 
-exports.getCategory = (req, res) => {
-    let category = req.body.result.parameters['Categories'];
-    getArticle(category).then((output) => {
-        res.setHeader('Content-Type', 'application/json; charset=UTF-8');
-        res.send(JSON.stringify({ 'speech': output, 'displayText': output }));
-    }).catch((error) => {
-        res.setHeader('Content-Type', 'application/json; charset=UTF-8');
-        res.send(JSON.stringify({ 'speech': error, 'displayText': error }));
-    });
-};
-
-var getArticle = function(category){
+const getArticle = function(category) {
     return new Promise((resolve, reject) => {
         http.get({path: category_paths[category]}, (rssResponse) => {
             let body = '';
@@ -48,4 +37,23 @@ var getArticle = function(category){
             });
         });
     });
-}
+};
+
+app.use(koaBody());
+app.use(async ctx => {
+    let category = ctx.request.body.result.parameters['Categories'];
+
+    getArticle(category).then((output) => {
+        ctx.set('Content-Type', 'application/json; charset=UTF-8');
+        ctx.body(JSON.stringify({ 'speech': output, 'displayText': output }));
+    }).catch((error) => {
+        ctx.set('Content-Type', 'application/json; charset=UTF-8');
+        ctx.body(JSON.stringify({ 'speech': error, 'displayText': error }));
+    });
+});
+
+app.on('error', (err, ctx) => {
+    log.error('server error', err, ctx)
+  });
+
+app.listen(8000);
