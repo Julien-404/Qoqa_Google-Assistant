@@ -56,5 +56,5 @@ app.on('error', (err, ctx) => {
     log.error('server error', err, ctx)
   });
 
-  var port = process.env.PORT || 8000;
+process.env.PORT || 8000;
 // app.listen(8000);
