@@ -10,7 +10,7 @@
       ""
     ],
     "author": "Julien Dubi",
-    "license": "MIT"
+    "license": "MIT",
     "dependencies": {
         "dom-parser": "^0.1.5",
         "html-entities": "^1.2.1"
