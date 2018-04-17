@@ -1,0 +1,14 @@
+{
+    "name": "qoqa",
+    "version": "1.0.0",
+    "description": "Last offer from qoqa.ch for google assistant.",
+    "main": "index.js",
+    "scripts": {
+      "test": ""
+    },
+    "keywords": [
+      ""
+    ],
+    "author": "Julien Dubi",
+    "license": "MIT"
+  }
