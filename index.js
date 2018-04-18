@@ -48,12 +48,12 @@ app.use(koaBody());
 app.use(async ctx => {
     let offer = ctx.request.body.queryResult.parameters['Actual_Offer'];
     let responseID = ctx.request.body['responseId'];
-    let endResponse = 'Je peux faire autre chose pour vous ?'
+    let endResponse = ' Je peux faire autre chose pour vous ?'
 
     await getOffer(offer).then((output) => {
         console.log(output);
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
-        ctx.body = JSON.stringify({'fulfillmentText': output, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': output, endResponse}}}}); 
+        ctx.body = JSON.stringify({'fulfillmentText': output+endResponse, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': output+endResponse}}}}); 
     }).catch((error) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
         ctx.body = JSON.stringify({'fulfillmentText': error, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': error}}}}); 
