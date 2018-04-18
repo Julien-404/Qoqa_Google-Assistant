@@ -55,7 +55,7 @@ app.use(async ctx => {
         ctx.body = JSON.stringify({'fulfillmentText': output, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': output}}}}); 
     }).catch((error) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
-        ctx.body = JSON.stringify({ 'speech': error, 'displayText': error });
+        ctx.body = JSON.stringify({'fulfillmentText': error, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': error}}}}); 
     });
 });
 
