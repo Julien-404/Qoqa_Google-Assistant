@@ -13,6 +13,8 @@
   "author": "Julien Dubi",
   "license": "MIT",
   "dependencies": {
+    "dialogflow": "^0.3.0",
+    "dialogflow-fulfillment": "^0.3.0-beta.2",
     "dom-parser": "^0.1.5",
     "html-entities": "^1.2.1",
     "koa": "^2.5.0",
