@@ -19,7 +19,7 @@ const links = {
     
 };
 
-const getArticle = function(offer) {
+const getOffer = function(offer) {
     return new Promise((resolve, reject) => {
         console.log(links[offer]);
         https.get(links[offer], (rssResponse) => {
@@ -48,7 +48,7 @@ app.use(koaBody());
 app.use(async ctx => {
     let offer = ctx.request.body.queryResult.parameters['Actual_Offer'];
 
-    await getArticle(offer).then((output) => {
+    await getOffer(offer).then((output) => {
         console.log(output);
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
         ctx.body = JSON.stringify({ 'speech': output, 'displayText': output });
@@ -61,6 +61,3 @@ app.use(async ctx => {
 const port = process.env.PORT || 3000;
 app.listen(port);
 console.log('Listening to %s', port);
-
-// process.env.PORT || 3000;
-// app.listen(3000);
