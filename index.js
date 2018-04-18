@@ -51,7 +51,7 @@ app.use(async ctx => {
     await getOffer(offer).then((output) => {
         console.log(output);
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
-        ctx.body = JSON.stringify({ 'speech': output, 'displayText': output });
+        ctx.body = JSON.stringify({'simpleResponse':  { 'speech': output, 'displayText': output }});
     }).catch((error) => {
         ctx.set('Content-Type', 'application/json; charset=UTF-8');
         ctx.body = JSON.stringify({ 'speech': error, 'displayText': error });
