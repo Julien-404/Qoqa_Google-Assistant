@@ -21,26 +21,30 @@ const links = {
 
 const getOffer = function(offer) {
     return new Promise((resolve, reject) => {
-        console.log(links[offer]);
-        https.get(links[offer], (rssResponse) => {
-            let body = '';
-            rssResponse.on('data', (d) => { body += d; }); // store each response chunk
-            rssResponse.on('end', () => {
-                // console.log('END', body);
-                let parser = new DomParser();
-                let xmlDoc = parser.parseFromString(body,"text/xml");
-                // console.log(xmlDoc.getElementsByTagName("title")[2].textContent);
-                let shopTitle = xmlDoc.getElementsByTagName("title")[0].textContent;
-                let title = xmlDoc.getElementsByTagName("title")[1].textContent;
-                let product = xmlDoc.getElementsByTagName("title")[2].textContent;
-                let response = `${shopTitle}, ${title} : ${product}.`;
-                resolve(response);
+        console.log('URL', links[offer]);
+        try {
+            https.get(links[offer], (rssResponse) => {
+                let body = '';
+                rssResponse.on('data', (d) => { body += d; }); // store each response chunk
+                rssResponse.on('end', () => {
+                    // console.log('END', body);
+                    let parser = new DomParser();
+                    let xmlDoc = parser.parseFromString(body,"text/xml");
+                    // console.log(xmlDoc.getElementsByTagName("title")[2].textContent);
+                    let shopTitle = xmlDoc.getElementsByTagName("title")[0].textContent;
+                    let title = xmlDoc.getElementsByTagName("title")[1].textContent;
+                    let product = xmlDoc.getElementsByTagName("title")[2].textContent;
+                    let response = `${shopTitle}, ${title} : ${product}.`;
+                    resolve(response);
+                });
+                rssResponse.on('error', (error) => {
+                    // console.log('ERROR', error);
+                    reject(error);
+                });
             });
-            rssResponse.on('error', (error) => {
-                // console.log('ERROR', error);
-                reject(error);
-            });
-        });
+        } catch (error) {
+            reject(error);
+        }
     });
 };
 
@@ -50,22 +54,21 @@ app.use(async ctx => {
     let responseID = ctx.request.body['responseId'];
     let endResponse = ' Je peux faire autre chose pour vous ?'
 
-    if (offer === "") {
         //In case of nothing in the JSON recived by google, return an error
         let output = "Désoler, il y a eu une erreur. Merci de répéter votre demande."
         console.log(output);
             ctx.set('Content-Type', 'application/json; charset=UTF-8');
             ctx.body = JSON.stringify({'fulfillmentText': output, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': output}}}});
-    } else {
         await getOffer(offer).then((output) => {
             console.log(output);
             ctx.set('Content-Type', 'application/json; charset=UTF-8');
             ctx.body = JSON.stringify({'fulfillmentText': output+endResponse, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': output+endResponse}}}}); 
         }).catch((error) => {
+            console.log('ERROR : ', error);
+
             ctx.set('Content-Type', 'application/json; charset=UTF-8');
-            ctx.body = JSON.stringify({'fulfillmentText': error, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': error}}}}); 
+            ctx.body = JSON.stringify({'fulfillmentText': "Désoler, il y a eu une erreur. Merci de répéter votre demande.", 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': "Désoler, il y a eu une erreur. Merci de répéter votre demande."}}}}); 
         });
-    }
 
 });
 
