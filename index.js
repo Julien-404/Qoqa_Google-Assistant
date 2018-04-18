@@ -50,7 +50,13 @@ app.use(async ctx => {
     let responseID = ctx.request.body['responseId'];
     let endResponse = ' Je peux faire autre chose pour vous ?'
 
-            //Return infos at Google
+    if (offer === "") {
+        //In case of nothing in the JSON recived by google, return an error
+        let output = "Désoler, il y a eu une erreur. Merci de répéter votre demande."
+        console.log(output);
+            ctx.set('Content-Type', 'application/json; charset=UTF-8');
+            ctx.body = JSON.stringify({'fulfillmentText': output, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': output}}}});
+    } else {
         await getOffer(offer).then((output) => {
             console.log(output);
             ctx.set('Content-Type', 'application/json; charset=UTF-8');
@@ -59,6 +65,7 @@ app.use(async ctx => {
             ctx.set('Content-Type', 'application/json; charset=UTF-8');
             ctx.body = JSON.stringify({'fulfillmentText': error, 'payload': { 'google': { 'expectUserResponse': true, 'simpleResponse': {'textToSpeech': error}}}}); 
         });
+    }
 
 });
 
