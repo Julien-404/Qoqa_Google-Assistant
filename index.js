@@ -29,9 +29,7 @@ const getOffer = function(offer) {
                 // console.log('END', body);
                 let parser = new DomParser();
                 let xmlDoc = parser.parseFromString(body,"text/xml");
-                // console.log(xmlDoc.getElementsByTagName("title")[2].textContent);
                 let shopTitle = xmlDoc.getElementsByTagName("title")[0].textContent;
-                //let title = xmlDoc.getElementsByTagName("title")[1].textContent;
                 let product = xmlDoc.getElementsByTagName("title")[1].textContent;
                 let response = `${shopTitle} : ${product}.`;
                 resolve(response);
