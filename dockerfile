@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:alpine
 COPY . /app
 RUN cd /app && npm install
 CMD node /app/index.js
